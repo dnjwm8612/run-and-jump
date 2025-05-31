@@ -137,7 +137,7 @@ window.addEventListener('keydown', (e) => {
       animate();
     } else if (!isJumping && canJump) {
       isJumping = true;
-      jumpVelocity = 0.42; // 장애물 2짜리도 넘을 수 있도록 점프력 상향
+      jumpVelocity = 1; // 점프력 1로 수정
       canJump = false;
     }
   }
