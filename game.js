@@ -3,6 +3,8 @@
 let scene, camera, renderer, player, ground, obstacles = [];
 let clock = new THREE.Clock();
 let jumpVelocity = 0, gravity = -0.7, isJumping = false, canJump = true;
+let jumpCount = 0;
+const maxJumpCount = 2;
 let score = 0, gameOver = false, obstacleTimer = 0, obstacleInterval = 1.2;
 const scoreDiv = document.getElementById('score');
 const gameoverDiv = document.getElementById('gameover');
@@ -81,6 +83,7 @@ function animate() {
         isJumping = false;
         canJump = true;
         jumpVelocity = 0;
+        jumpCount = 0; // 바닥에 닿으면 점프 카운트 초기화
       }
     }
 
@@ -135,10 +138,10 @@ window.addEventListener('keydown', (e) => {
       document.body.removeChild(renderer.domElement);
       init();
       animate();
-    } else if (!isJumping && canJump && Math.abs(player.position.y - 0.5) < 0.01) {
+    } else if (jumpCount < maxJumpCount) {
       isJumping = true;
       jumpVelocity = 1; // 점프력 1로 수정
-      canJump = false;
+      jumpCount++;
     }
   }
 });
