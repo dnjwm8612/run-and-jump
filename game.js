@@ -14,10 +14,10 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xb7eaff);
 
-  // 3인칭 러너 시점: 캐릭터 오른쪽(뒤)에서 반대방향(음수 x축) 바라봄
+  // 3인칭 러너 시점: 캐릭터에서 멀리, 높게 위치
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(-5, 6, 0); // 캐릭터 오른쪽(뒤)에서 반대방향(음수 x축) 바라봄
-  camera.lookAt(-15, 1, 0);
+  camera.position.set(5, 10, 0); // 캐릭터에서 멀리, 높게 위치
+  camera.lookAt(-10, 1, 0);
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -140,7 +140,7 @@ function spawnObstacle() {
     eyeR.position.set(0.55, 0.6, 0.13);
     wolf.add(eyeL);
     wolf.add(eyeR);
-    wolf.position.set(-12, 0.3, 0);
+    wolf.position.set(12, 0.3, 0);
     wolf.userData = {type: 'wolf', height: 0.8};
     scene.add(wolf);
     obstacles.push(wolf);
@@ -178,7 +178,7 @@ function spawnObstacle() {
     eyeR.position.set(0.09, 1.28, 0.23);
     bird.add(eyeL);
     bird.add(eyeR);
-    bird.position.set(-12, 1.2, 0);
+    bird.position.set(12, 1.2, 0);
     bird.userData = {type: 'bird', height: 1.2};
     scene.add(bird);
     obstacles.push(bird);
@@ -212,10 +212,10 @@ function animate() {
 
     // Obstacles move
     for (let obs of obstacles) {
-      obs.position.x += 8 * delta; // 장애물은 오른쪽(x+)로 이동
+      obs.position.x -= 8 * delta;
     }
     // Remove passed obstacles
-    if (obstacles.length && obstacles[0].position.x > 14) {
+    if (obstacles.length && obstacles[0].position.x < -14) {
       scene.remove(obstacles[0]);
       obstacles.shift();
     }
