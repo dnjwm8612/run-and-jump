@@ -1,8 +1,8 @@
-// 3D Run and Jump Game with Three.js
+// 3D Run and Jump Game with Three.js (시점 및 점프 개선)
 
 let scene, camera, renderer, player, ground, obstacles = [];
 let clock = new THREE.Clock();
-let jumpVelocity = 0, gravity = -0.6, isJumping = false, canJump = true;
+let jumpVelocity = 0, gravity = -0.7, isJumping = false, canJump = true;
 let score = 0, gameOver = false, obstacleTimer = 0, obstacleInterval = 1.2;
 const scoreDiv = document.getElementById('score');
 const gameoverDiv = document.getElementById('gameover');
@@ -12,9 +12,10 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xb7eaff);
 
+  // 3인칭 러너 시점: 캐릭터 뒤에서 따라가는 카메라
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 6, 16);
-  camera.lookAt(0, 1, 0);
+  camera.position.set(-7, 4, 0); // 캐릭터 뒤쪽에서 바라봄
+  camera.lookAt(-5, 1, 0);
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -83,6 +84,10 @@ function animate() {
       }
     }
 
+    // 카메라가 캐릭터를 따라가도록 위치 보정
+    camera.position.y += ((player.position.y + 3.5) - camera.position.y) * 0.1;
+    camera.lookAt(player.position.x + 2, player.position.y + 0.5, 0);
+
     // Obstacles move
     for (let obs of obstacles) {
       obs.position.x -= 8 * delta;
@@ -132,7 +137,7 @@ window.addEventListener('keydown', (e) => {
       animate();
     } else if (!isJumping && canJump) {
       isJumping = true;
-      jumpVelocity = 0.22;
+      jumpVelocity = 0.32; // 점프 높이 상향
       canJump = false;
     }
   }
