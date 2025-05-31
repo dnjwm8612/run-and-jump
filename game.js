@@ -14,10 +14,10 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xb7eaff);
 
-  // 3인칭 러너 시점: 캐릭터에서 멀리, 높게 위치
+  // 3인칭 러너 시점: 캐릭터 뒤에서 따라가는 카메라
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(5, 10, 0); // 캐릭터에서 멀리, 높게 위치
-  camera.lookAt(-10, 1, 0);
+  camera.position.set(-15, 10, 0); // 반대 방향에서 멀리, 높게 위치
+  camera.lookAt(0, 1, 0);
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -84,6 +84,7 @@ function init() {
 
   player = playerGeo;
   player.position.set(-5, 0.5, 0);
+  player.scale.set(0.5, 0.5, 0.5); // 캐릭터 크기 1/2로 축소
   player.rotation.y = Math.PI / 2; // 반대방향(음수 x축) 바라보게 회전
   scene.add(player);
 
