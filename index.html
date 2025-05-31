@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Run and Jump Game</title>
-    <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #222; }
-        canvas { background: #fff; display: block; margin: auto; border: 2px solid #333; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Run and Jump 3D</title>
+  <style>
+    body { margin: 0; background: #222; overflow: hidden; }
+    #score { position: absolute; top: 20px; left: 20px; color: #fff; font-size: 24px; z-index: 10; }
+    #gameover { display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:36px; background:rgba(0,0,0,0.7); padding:32px 48px; border-radius:20px; }
+  </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="600" height="300"></canvas>
-    <script src="game.js"></script>
+  <div id="score">Score: 0</div>
+  <div id="gameover">Game Over<br><span style="font-size:22px;">Press Space to Restart</span></div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
