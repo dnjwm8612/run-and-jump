@@ -14,10 +14,10 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xb7eaff);
 
-  // 3인칭 러너 시점: 캐릭터 왼쪽에서 정면(양수 x축) 바라봄
+  // 3인칭 러너 시점: 캐릭터 오른쪽(뒤)에서 반대방향(음수 x축) 바라봄
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(-5, 6, 0); // 캐릭터 왼쪽에서 정면(양수 x축) 바라봄
-  camera.lookAt(5, 1, 0);
+  camera.position.set(-5, 6, 0); // 캐릭터 오른쪽(뒤)에서 반대방향(음수 x축) 바라봄
+  camera.lookAt(-15, 1, 0);
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -84,7 +84,7 @@ function init() {
 
   player = playerGeo;
   player.position.set(-5, 0.5, 0);
-  player.rotation.y = -Math.PI / 2; // 정면(양수 x축) 바라보게 회전
+  player.rotation.y = Math.PI / 2; // 반대방향(음수 x축) 바라보게 회전
   scene.add(player);
 
   // Reset
