@@ -14,7 +14,7 @@ function init() {
 
   // 3인칭 러너 시점: 캐릭터 뒤에서 따라가는 카메라
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(-7, 4, 0); // 캐릭터 뒤쪽에서 바라봄
+  camera.position.set(-10.5, 6, 0); // 캐릭터 뒤쪽에서 1.5배 거리로 변경
   camera.lookAt(-5, 1, 0);
 
   renderer = new THREE.WebGLRenderer({antialias:true});
@@ -137,7 +137,7 @@ window.addEventListener('keydown', (e) => {
       animate();
     } else if (!isJumping && canJump) {
       isJumping = true;
-      jumpVelocity = 0.32; // 점프 높이 상향
+      jumpVelocity = 0.42; // 장애물 2짜리도 넘을 수 있도록 점프력 상향
       canJump = false;
     }
   }
