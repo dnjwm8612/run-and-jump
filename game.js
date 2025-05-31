@@ -135,7 +135,7 @@ window.addEventListener('keydown', (e) => {
       document.body.removeChild(renderer.domElement);
       init();
       animate();
-    } else if (!isJumping && canJump) {
+    } else if (!isJumping && canJump && Math.abs(player.position.y - 0.5) < 0.01) {
       isJumping = true;
       jumpVelocity = 1; // 점프력 1로 수정
       canJump = false;
