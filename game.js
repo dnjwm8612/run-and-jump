@@ -14,10 +14,10 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xb7eaff);
 
-  // 3인칭 러너 시점: 캐릭터 뒤에서 따라가는 카메라
+  // 3인칭 러너 시점: 캐릭터 왼쪽에서 정면(양수 x축) 바라봄
   camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  camera.position.set(-10.5, 6, 0); // 캐릭터 뒤쪽에서 1.5배 거리로 변경
-  camera.lookAt(-5, 1, 0);
+  camera.position.set(-5, 6, 0); // 캐릭터 왼쪽에서 정면(양수 x축) 바라봄
+  camera.lookAt(5, 1, 0);
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -84,6 +84,7 @@ function init() {
 
   player = playerGeo;
   player.position.set(-5, 0.5, 0);
+  player.rotation.y = -Math.PI / 2; // 정면(양수 x축) 바라보게 회전
   scene.add(player);
 
   // Reset
@@ -99,14 +100,89 @@ function init() {
 }
 
 function spawnObstacle() {
-  const h = Math.random() < 0.3 ? 2 : 1;
-  const geo = new THREE.BoxGeometry(1, h, 1);
-  const mat = new THREE.MeshPhongMaterial({color: 0xe74c3c});
-  const obs = new THREE.Mesh(geo, mat);
-  obs.position.set(12, h/2, 0);
-  obs.userData = {height: h};
-  scene.add(obs);
-  obstacles.push(obs);
+  // 50% 확률로 늑대(점프 장애물) 또는 새(점프하면 안되는 장애물) 생성
+  if (Math.random() < 0.5) {
+    // 늑대(점프해야 함, 바닥)
+    const wolf = new THREE.Group();
+    // 몸통
+    const bodyGeo = new THREE.BoxGeometry(1, 0.6, 0.5);
+    const bodyMat = new THREE.MeshPhongMaterial({color: 0x888888});
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 0.3;
+    wolf.add(body);
+    // 머리
+    const headGeo = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    const headMat = new THREE.MeshPhongMaterial({color: 0x888888});
+    const head = new THREE.Mesh(headGeo, headMat);
+    head.position.set(0.4, 0.55, 0);
+    wolf.add(head);
+    // 귀
+    const earGeo = new THREE.ConeGeometry(0.11, 0.2, 8);
+    const earMat = new THREE.MeshPhongMaterial({color: 0x444444});
+    const earL = new THREE.Mesh(earGeo, earMat);
+    const earR = new THREE.Mesh(earGeo, earMat);
+    earL.position.set(0.55, 0.8, -0.12);
+    earR.position.set(0.55, 0.8, 0.12);
+    wolf.add(earL);
+    wolf.add(earR);
+    // 코
+    const noseGeo = new THREE.SphereGeometry(0.07, 8, 8);
+    const noseMat = new THREE.MeshPhongMaterial({color: 0x222222});
+    const nose = new THREE.Mesh(noseGeo, noseMat);
+    nose.position.set(0.65, 0.5, 0);
+    wolf.add(nose);
+    // 눈
+    const eyeGeo = new THREE.SphereGeometry(0.05, 8, 8);
+    const eyeMat = new THREE.MeshPhongMaterial({color: 0xffffff});
+    const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+    const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeL.position.set(0.55, 0.6, -0.13);
+    eyeR.position.set(0.55, 0.6, 0.13);
+    wolf.add(eyeL);
+    wolf.add(eyeR);
+    wolf.position.set(-12, 0.3, 0);
+    wolf.userData = {type: 'wolf', height: 0.8};
+    scene.add(wolf);
+    obstacles.push(wolf);
+  } else {
+    // 새(점프하면 안됨, 공중)
+    const bird = new THREE.Group();
+    // 몸통
+    const bodyGeo = new THREE.SphereGeometry(0.3, 16, 16);
+    const bodyMat = new THREE.MeshPhongMaterial({color: 0x3399ff});
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = 1.2;
+    bird.add(body);
+    // 날개
+    const wingGeo = new THREE.BoxGeometry(0.5, 0.08, 0.18);
+    const wingMat = new THREE.MeshPhongMaterial({color: 0x3399ff});
+    const wingL = new THREE.Mesh(wingGeo, wingMat);
+    const wingR = new THREE.Mesh(wingGeo, wingMat);
+    wingL.position.set(-0.3, 1.2, 0);
+    wingR.position.set(0.3, 1.2, 0);
+    bird.add(wingL);
+    bird.add(wingR);
+    // 부리
+    const beakGeo = new THREE.ConeGeometry(0.07, 0.18, 8);
+    const beakMat = new THREE.MeshPhongMaterial({color: 0xffcc00});
+    const beak = new THREE.Mesh(beakGeo, beakMat);
+    beak.position.set(0, 1.18, 0.32);
+    beak.rotation.x = Math.PI/2;
+    bird.add(beak);
+    // 눈
+    const eyeGeo = new THREE.SphereGeometry(0.04, 8, 8);
+    const eyeMat = new THREE.MeshPhongMaterial({color: 0x222222});
+    const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+    const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+    eyeL.position.set(-0.09, 1.28, 0.23);
+    eyeR.position.set(0.09, 1.28, 0.23);
+    bird.add(eyeL);
+    bird.add(eyeR);
+    bird.position.set(-12, 1.2, 0);
+    bird.userData = {type: 'bird', height: 1.2};
+    scene.add(bird);
+    obstacles.push(bird);
+  }
 }
 
 function resetObstacles() {
@@ -136,10 +212,10 @@ function animate() {
 
     // Obstacles move
     for (let obs of obstacles) {
-      obs.position.x -= 8 * delta;
+      obs.position.x += 8 * delta; // 장애물은 오른쪽(x+)로 이동
     }
     // Remove passed obstacles
-    if (obstacles.length && obstacles[0].position.x < -14) {
+    if (obstacles.length && obstacles[0].position.x > 14) {
       scene.remove(obstacles[0]);
       obstacles.shift();
     }
@@ -154,12 +230,24 @@ function animate() {
 
     // Collision
     for (let obs of obstacles) {
-      if (
-        Math.abs(player.position.x - obs.position.x) < 0.8 &&
-        player.position.y < obs.userData.height + 0.1
-      ) {
-        gameOver = true;
-        gameoverDiv.style.display = "block";
+      if (obs.userData.type === 'wolf') {
+        // 늑대: 바닥에 있을 때만 충돌
+        if (
+          Math.abs(player.position.x - obs.position.x) < 0.8 &&
+          player.position.y < 0.9
+        ) {
+          gameOver = true;
+          gameoverDiv.style.display = "block";
+        }
+      } else if (obs.userData.type === 'bird') {
+        // 새: 점프 중일 때만 충돌
+        if (
+          Math.abs(player.position.x - obs.position.x) < 0.8 &&
+          player.position.y > 0.9
+        ) {
+          gameOver = true;
+          gameoverDiv.style.display = "block";
+        }
       }
     }
 
