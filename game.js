@@ -36,10 +36,53 @@ function init() {
   ground.position.set(0, -0.5, 0);
   scene.add(ground);
 
-  // Player (cube)
-  const playerGeo = new THREE.BoxGeometry(1, 1, 1);
-  const playerMat = new THREE.MeshPhongMaterial({color: 0xffffff});
-  player = new THREE.Mesh(playerGeo, playerMat);
+  // Player (rabbit)
+  const playerGeo = new THREE.Group();
+
+  // 몸통
+  const bodyGeo = new THREE.CylinderGeometry(0.4, 0.5, 1.2, 16);
+  const bodyMat = new THREE.MeshPhongMaterial({color: 0xffffff});
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.y = 0.6;
+  playerGeo.add(body);
+
+  // 머리
+  const headGeo = new THREE.SphereGeometry(0.35, 16, 16);
+  const headMat = new THREE.MeshPhongMaterial({color: 0xffffff});
+  const head = new THREE.Mesh(headGeo, headMat);
+  head.position.y = 1.25;
+  playerGeo.add(head);
+
+  // 귀
+  const earGeo = new THREE.CylinderGeometry(0.09, 0.12, 0.6, 12);
+  const earMat = new THREE.MeshPhongMaterial({color: 0xffffff});
+  const earL = new THREE.Mesh(earGeo, earMat);
+  const earR = new THREE.Mesh(earGeo, earMat);
+  earL.position.set(-0.15, 1.7, 0);
+  earR.position.set(0.15, 1.7, 0);
+  earL.rotation.z = Math.PI/16;
+  earR.rotation.z = -Math.PI/16;
+  playerGeo.add(earL);
+  playerGeo.add(earR);
+
+  // 코
+  const noseGeo = new THREE.SphereGeometry(0.07, 8, 8);
+  const noseMat = new THREE.MeshPhongMaterial({color: 0xffa0a0});
+  const nose = new THREE.Mesh(noseGeo, noseMat);
+  nose.position.set(0, 1.18, 0.33);
+  playerGeo.add(nose);
+
+  // 눈
+  const eyeGeo = new THREE.SphereGeometry(0.06, 8, 8);
+  const eyeMat = new THREE.MeshPhongMaterial({color: 0x222222});
+  const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+  const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+  eyeL.position.set(-0.13, 1.29, 0.32);
+  eyeR.position.set(0.13, 1.29, 0.32);
+  playerGeo.add(eyeL);
+  playerGeo.add(eyeR);
+
+  player = playerGeo;
   player.position.set(-5, 0.5, 0);
   scene.add(player);
 
@@ -140,7 +183,7 @@ window.addEventListener('keydown', (e) => {
       animate();
     } else if (jumpCount < maxJumpCount) {
       isJumping = true;
-      jumpVelocity = 1; // 점프력 1로 수정
+      jumpVelocity = 2; // 점프력 2로 수정
       jumpCount++;
     }
   }
